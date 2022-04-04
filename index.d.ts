@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 // Definitions by: Josh Baldwin <https://github.com/jbaldwin>, Dmitrii Sorin <https://github.com/1999>
 
 interface PDFPromise<T> {
@@ -71,8 +72,16 @@ interface PDFProgressData {
     total: number;
 }
 
+interface PDFDataRangeTransportListener {
+    (loaded: number, total: number): void;
+}
 
-declare class PDFDataRangeTransport {
+declare enum VerbosityLevel {
+    ERRORS = 0,
+    WARNINGS = 1,
+    INFOS = 5,
+}
+export declare class PDFDataRangeTransport {
     constructor(length: number, initialData: Uint8Array | BufferSource, progressiveDone?: boolean);
     addRangeListener(listener: PDFDataRangeTransportListener): void;
     addProgressListener(listener: PDFDataRangeTransportListener): void;
@@ -93,7 +102,7 @@ interface PDFWorkerParameters {
     verbosity?: VerbosityLevel;
 }
 
-declare class PDFWorker {
+export declare class PDFWorker {
     constructor(params?: PDFWorkerParameters);
     readonly promise: Promise<unknown>;
     readonly port: any | null;
@@ -222,9 +231,6 @@ interface PDFAnnotationData {
 
 interface PDFAnnotations {
     getData(): PDFAnnotationData;
-    hasHtml(): boolean; // always false
-    getHtmlElement(commonOjbs: any): HTMLElement; // throw new NotImplementedException()
-    getEmptyContainer(tagName: string, rect: number[]): HTMLElement; // deprecated
     isViewable(): boolean;
     loadResources(keys: any): PDFPromise<any>;
     getOperatorList(evaluator: any): PDFPromise<any>;
@@ -244,7 +250,7 @@ interface PDFRenderImageLayer {
 }
 
 interface PDFRenderParams {
-    canvasContext: CanvasRenderingContext2D;
+    canvasContext: never;
     viewport?: PDFPageViewport;
     textLayer?: PDFRenderTextLayer;
     imageLayer?: PDFRenderImageLayer;
@@ -340,32 +346,29 @@ interface PDFLoadingTask<T> {
 
 /**
  * This is the main entry point for loading a PDF and interacting with it.
- * NOTE: If a URL is used to fetch the PDF data a standard XMLHttpRequest(XHR)
- * is used, which means it must follow the same origin rules that any XHR does
- * e.g. No cross domain requests without CORS.
  * @param source
  * @param pdfDataRangeTransport Used if you want to manually server range requests for data in the PDF.  @see viewer.js for an example of pdfDataRangeTransport's interface.
  * @param passwordCallback Used to request a password if wrong or no password was provided.  The callback receives two parameters: function that needs to be called with new password and the reason.
  * @param progressCallback Progress callback.
  * @return A promise that is resolved with PDFDocumentProxy object.
  **/
-declare function getDocument(
+export declare function getDocument(
     source: string,
-    pdfDataRangeTransport?: any,
+    pdfDataRangeTransport?: PDFDataRangeTransport,
     passwordCallback?: (fn: (password: string) => void, reason: string) => string,
     progressCallback?: (progressData: PDFProgressData) => void
 ): PDFLoadingTask<PDFDocumentProxy>;
 
-declare function getDocument(
+export declare function getDocument(
     source: Uint8Array,
-    pdfDataRangeTransport?: any,
+    pdfDataRangeTransport?: PDFDataRangeTransport,
     passwordCallback?: (fn: (password: string) => void, reason: string) => string,
     progressCallback?: (progressData: PDFProgressData) => void
 ): PDFLoadingTask<PDFDocumentProxy>;
 
-declare function getDocument(
+export declare function getDocument(
     source: PDFSource,
-    pdfDataRangeTransport?: any,
+    pdfDataRangeTransport?: PDFDataRangeTransport,
     passwordCallback?: (fn: (password: string) => void, reason: string) => string,
     progressCallback?: (progressData: PDFProgressData) => void
 ): PDFLoadingTask<PDFDocumentProxy>;
