@@ -1,0 +1,5 @@
+node_modules/
+temp/
+pnpm-lock.yaml
+stats.html
+dist/
