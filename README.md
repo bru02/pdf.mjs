@@ -6,19 +6,11 @@
 ![npm bundle size](https://img.shields.io/bundlephobia/min/pdf.mjs)
 
 [PDF.js](https://github.com/mozilla/pdf.js) custom-compiled for nodeless, serverless enviroments, like [Deno Deploy](https://deno.com/deploy) and [Cloudflare Workers](https://workers.cloudflare.com).
-Rocking in at just under 700kb uncompressed.
+Rocking in under 700kb uncompressed.
 
-## Installation
+## Usage
 
-```sh
-npm i pdf.mjs
-# or
-yarn add pdf.mjs
-```
-
-## Examples
-
-### Deno
+### 🦕 Deno
 
 ```ts
 import { getDocument } from 'https://cdn.skypack.dev/pdf.mjs?dts'
@@ -36,7 +28,25 @@ for (let i = 1; i <= doc.numPages; i++) {
 }
 ```
 
-### Cloudflare Workers
+### ⚡️ Cloudflare Workers
+
+### Installation
+
+```sh
+npm i pdf.mjs
+# or
+yarn add pdf.mjs
+```
+
+### Compatibility flag
+
+Make sure you enable the `"streams_enable_constructors"` compatibility flag in your `wrangler.toml` file:
+
+```toml
+compatibility_flags = [ "streams_enable_constructors" ]
+```
+
+### Example
 
 ```ts
 import { getDocument } from 'pdf.mjs'
@@ -50,6 +60,7 @@ export default {
                 status: 400
             })
 
+        // Fetch the pdf file, as binary
         const buff = await fetch(url).then(r => r.arrayBuffer())
 
         // Note: passing an url to getDocument is not supported on workers
