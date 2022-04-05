@@ -13,7 +13,7 @@ Rocking in under 700kb uncompressed.
 ### 🦕 Deno
 
 ```ts
-import { getDocument } from 'https://cdn.skypack.dev/pdf.mjs?dts'
+import { getDocument } from 'https://esm.sh/pdf.mjs'
 
 const data = Deno.readFileSync('./file.pdf')
 const doc = await getDocument(data).promise
